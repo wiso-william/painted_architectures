@@ -151,3 +151,19 @@ ORDER BY born_in DESC
 LIMIT 1;
 
 
+-- INDEXES
+-- 1. ARTIST ID FOREIGN KEY - ART PIECES
+CREATE INDEX idx_art_pieces_artist_id ON art_pieces(artist_id);
+
+-- 2. PERIOD LABEL - ART PIECES
+CREATE INDEX idx_art_pieces_period_label ON art_pieces(period_label);
+
+-- 3. PAINTING TECHNIQUE - ART PIECES 
+CREATE INDEX idx_art_pieces_technique ON art_pieces(painting_technique);
+
+-- 4. ART PIECE ID FOREIGN KEY - ARCHITECTURES
+CREATE INDEX idx_architectures_art_piece_id ON architectures(art_piece_id);
+
+-- 5. ARCHITECTURE ID FOREIGN KEY - COMPONENTS
+CREATE INDEX idx_components_architecture_id ON components(architecture_id);
+
