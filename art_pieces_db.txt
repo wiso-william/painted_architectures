@@ -1,0 +1,84 @@
+CREATE TABLE art_pieces(
+id INTEGER PRIMARY KEY,
+painting_technique_id INTEGER NOT NULL,
+artist_id INTEGER NOT NULL,
+
+title VARCHAR(500) NOT NULL,
+description VARCHAR(3000),
+short_description VARCHAR(500),
+slug VARCHAR(100) UNIQUE,
+period_label VARCHAR(200),
+created_where VARCHAR(200) DEFAULT "Sconosciuta", 
+momentary_position VARCHAR(200) DEFAULT "Sconosciuta",
+height_cm DECIMAL(6,2),
+width_cm DECIMAL(6,2),
+bibliography VARCHAR(3000),
+commissioned_by VARCHAR(200),
+img_url VARCHAR(500) NOT NULL,
+
+created_in VARCHAR(100),
+
+CHECK(created_in < CURRENT_DATE),
+FOREIGN KEY(painting_technique_id) REFERENCES painting_techniques(id),
+FOREIGN KEY(artist_id) REFERENCES artists(id)
+);
+
+CREATE TABLE painting_techniques(
+id INTEGER PRIMARY KEY,
+
+name VARCHAR(200) NOT NULL,
+description VARCHAR(3000) NOT NULL
+);
+
+CREATE TABLE artists(
+id INTEGER PRIMARY KEY,
+
+name VARCHAR(200) DEFAULT 'Autore Ignoto',
+born_where VARCHAR(200),
+died_where VARCHAR(200),
+
+born_in DATE,
+died_in DATE,
+
+CHECK (died_in IS NULL OR born_in IS NULL OR died_in >= born_in)
+);
+
+CREATE TABLE architectures(
+id INTEGER PRIMARY KEY,
+art_piece_id INTEGER NOT NULL,
+
+type VARCHAR(500) NOT NULL, --no additional table because they can be too unique
+description VARCHAR(3000), --no short_desc because it's detail_page,
+img_url VARCHAR(500) NOT NULL,
+
+FOREIGN KEY(art_piece_id) REFERENCES art_pieces(id)
+);
+
+CREATE TABLE components(
+id INTEGER PRIMARY KEY,
+architecture_id INTEGER NOT NULL,
+
+type VARCHAR(200) NOT NULL,
+description VARCHAR(3000) NOT NULL,
+img_url VARCHAR(500) NOT NULL,
+
+FOREIGN KEY(architecture_id) REFERENCES architectures(id)
+);
+
+
+-- INSERT INTO EXAMPLES
+INSERT INTO painting_techniques(name,description)
+VALUES ('Tempera su Tela', 'La pittura a tempera è un'antica tecnica pittorica che utilizza pigmenti mescolati con un legante a base d'acqua, impiegata da varie culture fino al Rinascimento. La tempera viene tradizionalmente ottenuta dal tuorlo d'uovo e altre emulsioni, creando un mezzo durevole e insensibile all'umidità e alla temperatura.'),
+('Olio su Tela', 'L'olio su tela è una tecnica pittorica che usa pigmenti mescolati a oli vegetali (come lino o papavero) per creare colori vibranti, durevoli e con un effetto lucido sulla tela preparata. Le sue caratteristiche principali includono un'asciugatura lenta, che permette all'artista precisione e sfumature dettagliate, e la stabilità nel tempo.');
+
+-- ARTISTS
+INSERT INTO artists(name,born_where,died_where,born_in,died_in)
+VALUES("Ercole de Roberti", "Ferrara", "Ferrara","1450-01-01", "1496-05-18");
+
+-- ART PIECES
+INSERT INTO art_pieces(painting_technique_id,artist_id,title,description,short_description,slug,period_label,created_where,momentary_position,height_cm,width_cm,bibliography,img_url, created_in)
+VALUES(1,1,"Istituzione dell\' Eucarestia","Gesù siede a capotavola, circondato dai suoi discepoli, tenendo in mano un pezzo di pane, che benedice: questa è l\'Ultima Cena. L\'abilità di Ercole nel dipingere dettagli su piccola scala è evidente: ogni discepolo ha un'espressione facciale diversa, e i bicchieri trasparenti, le caraffe e i bocconcini di pane sul tavolo sono dipinti come una minuscola natura morta.","Scena dell\'ultima cena.","istituzione-dell-eucarestia","Seconda metà dell\' 400","Ferrara","Londra - National Gallery",29.8,21,"DANESI,SGARBI 2023","https://www.crossroadsinitiative.com/wp-content/uploads/2021/06/The-Institution-of-the-Eucharist-Ercole-de-Robert-national-gallery-public-domain.jpg","1493-1496");
+
+-- PAINTED ARCHITECTURES
+INSERT INTO architectures(art_piece_id,type,description,img_url)
+VALUES(1,"Ambiente architettonico interno", "Interno coperto a cassettoni con paraste che sorreggono una trabeazione","https://www.crossroadsinitiative.com/wp-content/uploads/2021/06/The-Institution-of-the-Eucharist-Ercole-de-Robert-national-gallery-public-domain.jpg")
