@@ -1,9 +1,9 @@
 CREATE TABLE art_pieces(
 id INTEGER PRIMARY KEY,
-painting_technique_id INTEGER NOT NULL,
 artist_id INTEGER NOT NULL,
 
 title VARCHAR(500) NOT NULL,
+painting_technique VARCHAR(300) NOT NULL,
 description VARCHAR(3000),
 short_description VARCHAR(500),
 slug VARCHAR(100) UNIQUE,
@@ -21,13 +21,6 @@ created_in VARCHAR(100),
 CHECK(created_in < CURRENT_DATE),
 FOREIGN KEY(painting_technique_id) REFERENCES painting_techniques(id),
 FOREIGN KEY(artist_id) REFERENCES artists(id)
-);
-
-CREATE TABLE painting_techniques(
-id INTEGER PRIMARY KEY,
-
-name VARCHAR(200) NOT NULL,
-description VARCHAR(3000) NOT NULL
 );
 
 CREATE TABLE artists(
@@ -67,10 +60,6 @@ FOREIGN KEY(architecture_id) REFERENCES architectures(id)
 
 
 -- INSERT INTO EXAMPLES
-INSERT INTO painting_techniques(name, description)
-VALUES 
-('Tempera su Tela', 'La pittura a tempera è un''antica tecnica pittorica che utilizza pigmenti mescolati con un legante a base d''acqua, impiegata da varie culture fino al Rinascimento. La tempera viene tradizionalmente ottenuta dal tuorlo d''uovo e altre emulsioni, creando un mezzo durevole e insensibile all''umidità e alla temperatura.'),
-('Olio su Tela', 'L''olio su tela è una tecnica pittorica che usa pigmenti mescolati a oli vegetali come lino o papavero per creare colori vibranti, durevoli e con un effetto lucido sulla tela preparata. Le sue caratteristiche principali includono un''asciugatura lenta, che permette all''artista precisione e sfumature dettagliate, e la stabilità nel tempo.');
 
 -- ARTISTS
 INSERT INTO artists(name, born_where, died_where, born_in, died_in)
@@ -79,10 +68,10 @@ VALUES
 
 -- ART PIECES
 INSERT INTO art_pieces(
-    painting_technique_id, artist_id, title, description, short_description, slug, period_label, created_where, momentary_position, height_cm, width_cm, bibliography, img_url, created_in
+    painting_technique,artist_id, title, description, short_description, slug, period_label, created_where, momentary_position, height_cm, width_cm, bibliography, img_url, created_in
 )
 VALUES(
-    1, 1,
+    'Tempera su Tela', 1,
     'Istituzione dell'' Eucarestia',
     'Gesù siede a capotavola, circondato dai suoi discepoli, tenendo in mano un pezzo di pane, che benedice: questa è l''Ultima Cena. L''abilità di Ercole nel dipingere dettagli su piccola scala è evidente: ogni discepolo ha un''espressione facciale diversa, e i bicchieri trasparenti, le caraffe e i bocconcini di pane sul tavolo sono dipinti come una minuscola natura morta.',
     'Scena dell''ultima cena.',
@@ -114,4 +103,8 @@ VALUES(
     'Capitello con calato liscio e abaco dritto',
     'https://www.crossroadsinitiative.com/wp-content/uploads/2021/06/The-Institution-of-the-Eucharist-Ercole-de-Robert-national-gallery-public-domain.jpg'
 );
+
+
+-- EXAMPLE QUERIES
+-- 1. SHOW ALL ART PIECES AND THEIR ARTIST
 
