@@ -107,4 +107,47 @@ VALUES(
 
 -- EXAMPLE QUERIES
 -- 1. SHOW ALL ART PIECES AND THEIR ARTIST
+EXPLAIN QUERY PLAN
+SELECT a.title, a.painting_technique, ar.name AS artist
+FROM art_pieces a
+JOIN artists ar ON a.artist_id = ar.id;
+
+-- 2.ALL ART PIECES OF A CERTAIN ARTIST
+EXPLAIN QUERY PLAN
+SELECT title, period_label, created_where
+FROM art_pieces
+WHERE artist_id = 1;
+
+-- 3. COUNT ART PIECES FOR EACH PAINTING TECHNIQUE
+EXPLAIN QUERY PLAN
+SELECT painting_technique, COUNT(id) AS num_art_pieces
+FROM art_pieces
+GROUP BY painting_technique;
+
+-- 4. LIST ARCHITECTURES AND THEIR COMPONENTS FOR A PARTICULAR ART PIECE
+EXPLAIN QUERY PLAN
+SELECT ar.type AS architecture, c.type AS component, c.description
+FROM architectures ar
+JOIN components c ON ar.id = c.architecture_id
+WHERE ar.art_piece_id = 1;
+
+-- 5. ART PIECES HIGHER THAN 1 METER
+EXPLAIN QUERY PLAN
+SELECT title, height_cm, width_cm
+FROM art_pieces
+WHERE height_cm > 100;
+
+-- 6. ART PIECES CONTAINING A PARTICULAR WORD
+EXPLAIN QUERY PLAN
+SELECT title, description
+FROM art_pieces
+WHERE title LIKE '%Eucarestia%' OR description LIKE '%Eucarestia%';
+
+-- 7. YOUNGEST ARTIST
+EXPLAIN QUERY PLAN
+SELECT name, born_in
+FROM artists
+ORDER BY born_in DESC
+LIMIT 1;
+
 
