@@ -125,3 +125,33 @@ General considerations about unmentioned constraints:
 > The database was designed entirely on simple **one to many relationships**, which ensure clarity, consistency and easy data retrieval.
 
 - **Artists => Art pieces**
+One artist can create **multiple** art pieces, but each art piece is linked to **a single artist**.
+
+- **Art pieces => Architectures**
+One art piece can include **multiple** architectural elements, but each architecture belongs to **only one** art piece.
+
+- **Architectures => Components**
+One architecture can contain **multiple** components, but each component is associated with **a single architecture**.
+
+
+## OPTIMIZATIONS
+> This section explains the choice of indexes and views created
+
+##### INDEXES
+After trying out some example queries, I used **EXPLAIN QUERY PLAN** to see how the database was actually fetching the data. Based on what I saw, I added a few indexes to speed things up and make the queries more efficient.
+
+```
+CREATE INDEX idx_art_pieces_artist_id ON art_pieces(artist_id);
+CREATE INDEX idx_art_pieces_period_label ON art_pieces(period_label);
+CREATE INDEX idx_art_pieces_technique ON art_pieces(painting_technique);
+CREATE INDEX idx_architectures_art_piece_id ON architectures(art_piece_id);
+CREATE INDEX idx_components_architecture_id ON components(architecture_id);
+```
+
+
+##### VIEWS
+The views I created are usefull to retrieve data that needs cleaning by looking at **NULL or empty values**. 
+
+- Artist with missing or NULL attributes
+- Architectures with missing descriptions which is will be used on the details page
+- Art pieces with missing or NULL attributes
