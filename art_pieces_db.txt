@@ -167,3 +167,45 @@ CREATE INDEX idx_architectures_art_piece_id ON architectures(art_piece_id);
 -- 5. ARCHITECTURE ID FOREIGN KEY - COMPONENTS
 CREATE INDEX idx_components_architecture_id ON components(architecture_id);
 
+
+-- VIEWS
+-- 1. ARTISTS WITH MISSING VALUES
+CREATE VIEW missing_artists_values AS(
+SELECT id,
+name,
+COALESCE(NULLIF(TRIM(born_where),''),'Mancante') AS missing_born_location,
+COALESCE(NULLIF(TRIM(died_where),''),'Mancante') AS missing_death_location,
+born_in AS data_nascita,
+died_in AS data_morte
+FROM artists
+WHERE
+NULLIF(TRIM(born_where), '') IS NULL
+OR NULLIF(TRIM(died_where), '') IS NULL
+OR born_in IS NULL
+OR died_in IS NULL
+);
+
+-- 2. ARCHITECTURES WITH MISSING DESCRIPTION
+CREATE VIEW missing_architecture_description AS(
+SELECT id,
+art_piece_id,
+type,
+COALESCE(NULLIF(TRIM(description),''),'Mancante') as missing_description
+FROM architectures
+WHERE NULLIF(TRIM(description),'') IS NULL
+);
+
+-- 3. ARTPIECES WITH MISSING VALUES
+CREATE VIEW missing_artpiece_values AS (
+SELECT title,
+COALESCE(NULLIF(TRIM(short_description),''),'Mancante') AS missing_short_desc,
+COALESCE(NULLIF(TRIM(description),''),'Mancante') AS missing_desc,
+COALESCE(NULLIF(TRIM(period_label),''),'Mancante') AS missing_period,
+COALESCE(NULLIF(TRIM(bibliography),''),'Mancante') AS missing_bibliography
+FROM art_pieces
+WHERE 
+NULLIF(TRIM(short_description),'') IS NULL
+OR NULLIF(TRIM(description),'') IS NULL
+OR NULLIF(TRIM(period_label),'') IS NULL
+OR NULLIF(TRIM(bibliography),'') IS NULL
+); 
