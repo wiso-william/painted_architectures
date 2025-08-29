@@ -155,3 +155,15 @@ The views I created are usefull to retrieve data that needs cleaning by looking 
 - Artist with missing or NULL attributes
 - Architectures with missing descriptions which is will be used on the details page
 - Art pieces with missing or NULL attributes
+
+
+## LIMITATIONS
+> This section will discuss the limitations of my database: design limitations, what it may not be able to represent well.
+
+- To allow easier retrieval of painting_techniques I may expose my database to duplicates with slightly different names, a query selecting DISTINCT(painting_techniques) Ordered by painting technique ASC could easily show this problem ('olio su tela' <> 'Olio su tela')
+- Location has the same problems as above and COUNT(CASE WHEN born_in = 'London' THEN 1 ELSE 0 END) may give incorrect results. The solution is the same as before.
+- A users table is missing since I don't need to track who visits the website and the insertion of data will probably be done directly inside the database. This is unsafe and doesn't allow to retain users informations
+- I don't  keep track of any changes to the data, for example I only know that a particular art piece is in London now but if it moves I'll not be able to track the older information.
+- If an art piece was made by more than one artist I couldn't keep track of both artists since my relations don't allow this, to solve this I'd neet to create a **many to many relationship** between artists and art_pieces
+- Even though the names are all in english the database is ment to collect data in italian, translating it all in english would require rethinking of the database
+- Tags could be added to allow better grouping and speed of retrieval of paintings that share a particular feature.
