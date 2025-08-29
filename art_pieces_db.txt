@@ -196,7 +196,7 @@ WHERE NULLIF(TRIM(description),'') IS NULL
 );
 
 -- 3. ARTPIECES WITH MISSING VALUES
-CREATE VIEW missing_artpiece_values AS (
+CREATE VIEW missing_art_pieces_values AS (
 SELECT title,
 COALESCE(NULLIF(TRIM(short_description),''),'Mancante') AS missing_short_desc,
 COALESCE(NULLIF(TRIM(description),''),'Mancante') AS missing_desc,
@@ -208,4 +208,42 @@ NULLIF(TRIM(short_description),'') IS NULL
 OR NULLIF(TRIM(description),'') IS NULL
 OR NULLIF(TRIM(period_label),'') IS NULL
 OR NULLIF(TRIM(bibliography),'') IS NULL
-); 
+);
+
+
+
+-- UPDATE PROCESS
+-- EXAMPLE A
+-- 1. FINDING MISSING VALUES - E.G. ARTISTS
+SELECT * 
+FROM missing_artists_values
+LIMIT 10;
+
+-- 2. UPDATING THE MISSING VALUE
+UPDATE artists
+SET born_where = 'Ferrara'
+WHERE id = 1;
+
+-- EXAMPLE B
+-- 1. FINDING MISSING VALUES E.G. ARTPIECE PERIOD LABEL
+SELECT * 
+FROM missing_art_pieces_values
+WHERE TRIM(missing_period) = 'Mancante'
+AND id <= 50;
+
+-- 2. UPDATING MISSING VALUE
+UPDATE art_pieces
+SET missing_period = 'Prima metà dell\' 400'
+WHERE id = 1
+
+
+-- DELETE PROCESS
+-- IDENTIFY ROWS TO DELETE AND DELETE
+WITH to_delete AS (
+SELECT id 
+FROM art_pieces
+WHERE title LIKE '%pizza%'
+AND title LIKE '%ananas%'
+)
+DELETE FROM art_pieces 
+WHERE id IN (SELECT id FROM to_delete);
